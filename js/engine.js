@@ -58,6 +58,10 @@ var Engine = (function(global) {
         main();
     }
 
+    function checkCollisions() {
+        
+    }
+
     /* 这个函数被 main 函数（我们的游戏主循环）调用，它本身调用所有的需要更新游戏角色
      * 数据的函数，取决于你怎样实现碰撞检测（意思是如何检测两个角色占据了同一个位置，
      * 比如你的角色死的时候），你可能需要在这里调用一个额外的函数。现在我们已经把这里
@@ -65,7 +69,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* 这个函数会遍历在 app.js 定义的存放所有敌人实例的数组，并且调用他们的 update()
