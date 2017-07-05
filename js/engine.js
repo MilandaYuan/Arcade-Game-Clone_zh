@@ -58,9 +58,6 @@ var Engine = (function(global) {
         main();
     }
 
-    function checkCollisions() {
-        
-    }
 
     /* 这个函数被 main 函数（我们的游戏主循环）调用，它本身调用所有的需要更新游戏角色
      * 数据的函数，取决于你怎样实现碰撞检测（意思是如何检测两个角色占据了同一个位置，
@@ -82,6 +79,20 @@ var Engine = (function(global) {
         });
         player.update();
     }
+
+    function checkCollisions(){
+        allEnemies.forEach(function(enemy){
+            var absX=Math.abs(enemy.x-player.x);
+            var absY=Math.abs(enemy.y-player.y);
+
+            if(absX<60 && absY===0){
+                //console.log('enemy:', enemy.x, enemy.y,'player:',player.x,player.y,'相对位置：' ,absX, absY)
+                player.x=202;
+                player.y=400;
+            }
+        })
+    }
+
 
     /* 这个函数做了一些游戏的初始渲染，然后调用 renderEntities 函数。记住，这个函数
      * 在每个游戏的时间间隙都会被调用一次（或者说游戏引擎的每个循环），因为这就是游戏

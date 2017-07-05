@@ -1,5 +1,4 @@
-const enemyInitialY = 53;
-const enemyInitialX = 10;
+
 
 // 这是我们的玩家要躲避的敌人
 var Enemy = function(x,y,v) {
@@ -20,10 +19,11 @@ Enemy.prototype.update = function(dt) {
     this.x=this.x+this.v*dt;
     if(this.x > 505) {
         this.x = enemyInitialX;
-        const max = 500;
-        const min = 100;
+        var max = 500;
+        var min = 100;
         this.v = Math.floor(Math.random() * (max - min + 1) + min);
     }
+
 };
 
 // 此为游戏必须的函数，用来在屏幕上画出敌人，
@@ -68,10 +68,14 @@ Player.prototype.handleInput=function(direction){
 // 现在实例化你的所有对象
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
 // 把玩家对象放进一个叫 player 的变量里面
+
+var enemyInitialX = 0;
+var enemyInitialY = 68;
+
 var allEnemies = [
     new Enemy(enemyInitialX,enemyInitialY,120),
     new Enemy(enemyInitialX,enemyInitialY + 83,150),
-    new Enemy(enemyInitialX,enemyInitialY + 83 * 2,200)
+    new Enemy(enemyInitialX,enemyInitialY + 83 * 2,100)
 ];
 
 var player = new Player();
