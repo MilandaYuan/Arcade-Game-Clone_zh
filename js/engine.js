@@ -23,7 +23,8 @@ var Engine = (function(global) {
 
     canvas.width = 505;
     canvas.height = 606;
-    doc.body.appendChild(canvas);
+
+    container.appendChild(canvas);
 
     /* 这个函数是整个游戏的主入口，负责适当的调用 update / render 函数 */
     function main() {
@@ -46,7 +47,10 @@ var Engine = (function(global) {
         /* 在浏览准备好调用重绘下一个帧的时候，用浏览器的 requestAnimationFrame 函数
          * 来调用这个函数
          */
-        win.requestAnimationFrame(main);
+
+        if(!isEnd){
+            win.requestAnimationFrame(main);
+        }
     }
 
     /* 这个函数调用一些初始化工作，特别是设置游戏必须的 lastTime 变量，这些工作只用
@@ -57,7 +61,7 @@ var Engine = (function(global) {
         lastTime = Date.now();
         main();
     }
-
+    global.initEngine = init;
 
     /* 这个函数被 main 函数（我们的游戏主循环）调用，它本身调用所有的需要更新游戏角色
      * 数据的函数，取决于你怎样实现碰撞检测（意思是如何检测两个角色占据了同一个位置，
@@ -67,6 +71,7 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         checkCollisions();
+        checkEnd();
     }
 
     /* 这个函数会遍历在 app.js 定义的存放所有敌人实例的数组，并且调用他们的 update()
@@ -78,6 +83,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+
     }
 
     function checkCollisions(){
@@ -89,17 +95,26 @@ var Engine = (function(global) {
                 //console.log('enemy:', enemy.x, enemy.y,'player:',player.x,player.y,'相对位置：' ,absX, absY)
                 player.x=202;
                 player.y=400;
+
             }
         })
     }
 
+    function checkEnd(){
+        if(player.y===68){
+            isEnd=true;
+            endImage();
+        }
+    }
 
     /* 这个函数做了一些游戏的初始渲染，然后调用 renderEntities 函数。记住，这个函数
      * 在每个游戏的时间间隙都会被调用一次（或者说游戏引擎的每个循环），因为这就是游戏
      * 怎么工作的，他们就像是那种每一页上都画着不同画儿的书，快速翻动的时候就会出现是
      * 动画的幻觉，但是实际上，他们只是不停的在重绘整个屏幕。
      */
+    var i=0;
     function render() {
+
         /* 这个数组保存着游戏关卡的特有的行对应的图片相对路径。 */
         var rowImages = [
                 'images/water-block.png',   // 这一行是河。
@@ -137,6 +152,8 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+
     }
 
     /* 这个函数现在没干任何事，但是这会是一个好地方让你来处理游戏重置的逻辑。可能是一个
@@ -144,7 +161,14 @@ var Engine = (function(global) {
      * 函数调用一次。
      */
     function reset() {
-        // 空操作
+        isEnd=false;
+        player.x=202;
+        player.y=400;
+        allEnemies = [
+            new Enemy(enemyInitialX,enemyInitialY,120),
+            new Enemy(enemyInitialX,enemyInitialY + 83,150),
+            new Enemy(enemyInitialX,enemyInitialY + 83 * 2,100)
+        ];
     }
 
     /* 紧接着我们来加载我们知道的需要来绘制我们游戏关卡的图片。然后把 init 方法设置为回调函数。
@@ -156,6 +180,7 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png'
+
     ]);
     Resources.onReady(init);
 
@@ -163,4 +188,6 @@ var Engine = (function(global) {
      * 对象。从而开发者就可以在他们的app.js文件里面更容易的使用它。
      */
     global.ctx = ctx;
+
+
 })(this);

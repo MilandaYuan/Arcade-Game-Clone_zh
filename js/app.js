@@ -64,6 +64,8 @@ Player.prototype.handleInput=function(direction){
         }
     }
 };
+var isEnd = false;
+
 
 // 现在实例化你的所有对象
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
@@ -72,11 +74,7 @@ Player.prototype.handleInput=function(direction){
 var enemyInitialX = 0;
 var enemyInitialY = 68;
 
-var allEnemies = [
-    new Enemy(enemyInitialX,enemyInitialY,120),
-    new Enemy(enemyInitialX,enemyInitialY + 83,150),
-    new Enemy(enemyInitialX,enemyInitialY + 83 * 2,100)
-];
+var allEnemies=[];
 
 var player = new Player();
 
@@ -92,3 +90,35 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+var container = document.getElementById('container');
+
+
+//重启游戏时，将游戏画面清除
+var restart = function(){
+    var children = container.children;
+    for (var i = children.length - 1; i > 0; i--) {
+        container.removeChild(children[i]);
+    }
+    initEngine();
+};
+
+
+//游戏过关的画面，出现灰色背景、成功标志以及重启游戏的按钮
+function endImage(){
+    var endBg = document.createElement('div');
+    var endFg = document.createElement('div');
+
+    container.appendChild(endBg);
+    endBg.outerHTML='<div class="endBg"></div>';
+
+    container.appendChild(endFg);
+    endFg.outerHTML = '<div>' +
+        '<img src="images/Star.png" class="endPic">' +
+        '<span class="endTxt abc">SUCCEED!</span>' +
+        '<div class="startBtn" onclick="restart()">restart</div>' +
+        '</div>';
+}
+
+
+
